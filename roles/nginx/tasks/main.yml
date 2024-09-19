@@ -1,4 +1,12 @@
-- name: Create dir cert
+- name: Create configuration directory
+  become: true
+  file:
+    path: /home/kovalev/nginx/conf
+    state: directory
+    recurse: yes
+    mode: '777'
+
+- name: Create HTML directory
   become: true
   file:
     path: /home/kovalev/nginx/html
@@ -6,10 +14,16 @@
     recurse: yes
     mode: '777'
 
-- name: Copy nginx config
+- name: Copy conf
   become: true
   copy:
-    src: files/
+    src: files/configuration/
+    dest: /home/kovalev/nginx/conf
+
+- name: Copy html
+  become: true
+  copy:
+    src: files/html/
     dest: /home/kovalev/nginx/html
 
 - name: Pull nginx Docker image
@@ -28,3 +42,4 @@
       - "80:80"
     volumes:
       - /home/kovalev/nginx/html:/usr/share/nginx/html
+      - /home/kovalev/nginx/conf:/etc/nginx/conf.d
