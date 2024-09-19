@@ -1,11 +1,30 @@
-- name: nginx
-  community.docker.docker_container:
+- name: Create dir cert
+  become: true
+  file:
+    path: /home/kovalev/nginx/html
+    state: directory
+    recurse: yes
+    mode: '777'
+
+- name: Copy nginx config
+  become: true
+  copy:
+    src: files/
+    dest: /home/kovalev/nginx/html
+
+- name: Pull nginx Docker image
+  become: true
+  docker_image:
     name: nginx
-    image: "{{ images.nginx }}"
-    container_default_behavior: no_defaults
-    log_driver: "json-file"
-    log_options: "max-size=5m"
-    capabilities: "NET_ADMIN"
-    network_mode: "host"
+    source: pull
+
+- name: Run nginx Docker container
+  become: true
+  docker_container:
+    name: nginx
+    image: nginx
+    state: started
     ports:
-      - '80:80'
+      - "80:80"
+    volumes:
+      - /home/kovalev/nginx/html:/usr/share/nginx/html

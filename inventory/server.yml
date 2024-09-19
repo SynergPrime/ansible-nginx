@@ -5,6 +5,4 @@ all:
       ansible_host: 134.209.116.153
       ansible_become_pass: b$LZsCL%76aiFygBs&f#9PH%
 
-vars:
-  images:
-    nginx: "nginx:stable-alpine3.20-perl"
+
